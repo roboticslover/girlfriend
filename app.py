@@ -4,22 +4,19 @@ import streamlit as st
 from streamlit_chat import message
 from langchain import OpenAI, LLMChain, PromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
-from dotenv import find_dotenv, load_dotenv
 
 # Load AI's personality details from personality.json
 with open('personality.json', 'r') as f:
     ai_details = json.load(f)
 
-# Load API key from environment variables
-load_dotenv(find_dotenv())
+# Assign API key directly
+OPENAI_API_KEY = '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'
 
 # Initialize session state
 st.session_state.setdefault('generated', [])
 st.session_state.setdefault('past', [])
 
 # Function to get AI response
-
-
 def get_response_from_ai(human_input):
     try:
         template = """
@@ -41,7 +38,7 @@ def get_response_from_ai(human_input):
         )
 
         # Initialize LangChain with OpenAI language model
-        chatgpt_chain = LLMChain(llm=OpenAI(temperature=0.2),
+        chatgpt_chain = LLMChain(llm=OpenAI(api_key=OPENAI_API_KEY, temperature=0.2),
                                  prompt=prompt,
                                  verbose=True, memory=ConversationBufferWindowMemory(k=2))
 
@@ -71,8 +68,6 @@ def get_response_from_ai(human_input):
         return ai_reply
 
 # Streamlit app UI callbacks
-
-
 def on_input_change():
     user_input = st.session_state.user_input.strip()
     if not user_input:
@@ -98,7 +93,6 @@ def on_input_change():
 def on_btn_click():
     st.session_state.past.clear()
     st.session_state.generated.clear()
-
 
 # Streamlit app layout
 st.title("Chat with Amy: Your AI Girlfriend")
